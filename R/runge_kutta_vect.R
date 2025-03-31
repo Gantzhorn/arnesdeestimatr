@@ -28,6 +28,18 @@
 #' print(result)
 runge_kutta_vect <- function(x0, y0, h, func, n) {
 
+  if (!(length(x0) == length(y0) || length(x0) == 1 || length(y0) == 1)) {
+    stop("x0 and y0 must have the same length or one of them must be a scalar.")
+  }
+
+  if (!is.numeric(h) || length(h) != 1) {
+    stop("h must be a numeric scalar.")
+  }
+
+  if (!is.numeric(n) || length(n) != 1 || n %% 1 != 0 || n < 1) {
+    stop("n must be a positive integer.")
+  }
+
   h <- h / n
 
   for(i in 1:n) {
