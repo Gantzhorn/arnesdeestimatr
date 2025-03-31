@@ -7,26 +7,26 @@
 runge_kutta_vect(x0, y0, h, func, n)
 }
 \arguments{
-\item{x0}{A numeric vector of initial values for the independent variable. It can handle vectorized input.}
+\item{x0}{A numeric vector of initial values for the independent variable.}
 
-\item{y0}{A numeric vector of initial values for the dependent variable. It can handle vectorized input.}
+\item{y0}{A numeric vector of initial values for the dependent variable.}
 
 \item{h}{A numeric scalar that defines the step size for the Runge-Kutta method.}
 
-\item{func}{A function that governs the derivative at a given point. It should take \code{x0} and \code{y0} as arguments.}
+\item{func}{A function that describes the derivative in the point some point \verb{(x,y)}. It should take \code{x0} and \code{y0} as arguments and be vectorized}
 
-\item{n}{An integer representing the number of sub-steps to iterate through. For our applications n = 1 is typically sufficient.}
+\item{n}{An integer representing the number of sub-steps to iterate through. Setting n = 1 is typically sufficient in estimation applications.}
 }
 \value{
-A numeric vector of estimated values of the dependent variable after \code{n} iterations.
-The output will have the same length as \code{y0}.
+A numeric vector of estimated values for the function described \code{func}, i.e. the ODE, evaluated at the points \code{x0 + h}.
+The output will have the same length as \code{x0} and \code{y0}.
 }
 \description{
 This function implements the \strong{Runge-Kutta 4th Order (RK4)} method for solving
 ordinary differential equations (ODEs). It is designed to handle \strong{vectorized}
-input for initial conditions \code{x0} and \code{y0}. The function computes
-the next value of \code{y0}, i.e. the value at \code{x0 + h} for all entries in \code{x0}
-based on a given function \code{func}, step size \code{h}, and number of sub-steps \code{n}.
+input for initial conditions \code{x0} and \code{y0}. The function gives the approximation
+to the solution of the initial value problem at \code{x0 + h} for all starting positions \code{x0}
+based on the provided function, \code{func}, a step-size \code{h}, and number of sub-steps \code{n}.
 }
 \examples{
 # Example of using runge_kutta_vect
