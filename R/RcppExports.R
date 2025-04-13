@@ -9,3 +9,19 @@ updatestep_sqrt_model <- function(X_0, lambda_t, A, m, sigma, step_length, dW) {
     .Call(`_arnesdeestimatr_updatestep_sqrt_model`, X_0, lambda_t, A, m, sigma, step_length, dW)
 }
 
+updatestep_linear_model <- function(X_0, lambda_t, A, m, sigma, step_length, dW) {
+    .Call(`_arnesdeestimatr_updatestep_linear_model`, X_0, lambda_t, A, m, sigma, step_length, dW)
+}
+
+updatestep_t_dist <- function(X_0, lambda_t, A, m, sigma, step_length, dW) {
+    .Call(`_arnesdeestimatr_updatestep_t_dist`, X_0, lambda_t, A, m, sigma, step_length, dW)
+}
+
+updatestep_F_dist <- function(X_0, lambda_t, A, m, sigma, step_length, dW) {
+    .Call(`_arnesdeestimatr_updatestep_F_dist`, X_0, lambda_t, A, m, sigma, step_length, dW)
+}
+
+updatestep_jacobi <- function(X_0, lambda_t, A, m, sigma, step_length, dW) {
+    .Call(`_arnesdeestimatr_updatestep_jacobi`, X_0, lambda_t, A, m, sigma, step_length, dW)
+}
+

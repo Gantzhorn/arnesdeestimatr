@@ -44,10 +44,82 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// updatestep_linear_model
+Rcpp::NumericVector updatestep_linear_model(double X_0, Rcpp::NumericVector lambda_t, double A, double m, double sigma, double step_length, Rcpp::NumericVector dW);
+RcppExport SEXP _arnesdeestimatr_updatestep_linear_model(SEXP X_0SEXP, SEXP lambda_tSEXP, SEXP ASEXP, SEXP mSEXP, SEXP sigmaSEXP, SEXP step_lengthSEXP, SEXP dWSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type X_0(X_0SEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type lambda_t(lambda_tSEXP);
+    Rcpp::traits::input_parameter< double >::type A(ASEXP);
+    Rcpp::traits::input_parameter< double >::type m(mSEXP);
+    Rcpp::traits::input_parameter< double >::type sigma(sigmaSEXP);
+    Rcpp::traits::input_parameter< double >::type step_length(step_lengthSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type dW(dWSEXP);
+    rcpp_result_gen = Rcpp::wrap(updatestep_linear_model(X_0, lambda_t, A, m, sigma, step_length, dW));
+    return rcpp_result_gen;
+END_RCPP
+}
+// updatestep_t_dist
+Rcpp::NumericVector updatestep_t_dist(double X_0, Rcpp::NumericVector lambda_t, double A, double m, double sigma, double step_length, Rcpp::NumericVector dW);
+RcppExport SEXP _arnesdeestimatr_updatestep_t_dist(SEXP X_0SEXP, SEXP lambda_tSEXP, SEXP ASEXP, SEXP mSEXP, SEXP sigmaSEXP, SEXP step_lengthSEXP, SEXP dWSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type X_0(X_0SEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type lambda_t(lambda_tSEXP);
+    Rcpp::traits::input_parameter< double >::type A(ASEXP);
+    Rcpp::traits::input_parameter< double >::type m(mSEXP);
+    Rcpp::traits::input_parameter< double >::type sigma(sigmaSEXP);
+    Rcpp::traits::input_parameter< double >::type step_length(step_lengthSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type dW(dWSEXP);
+    rcpp_result_gen = Rcpp::wrap(updatestep_t_dist(X_0, lambda_t, A, m, sigma, step_length, dW));
+    return rcpp_result_gen;
+END_RCPP
+}
+// updatestep_F_dist
+Rcpp::NumericVector updatestep_F_dist(double X_0, Rcpp::NumericVector lambda_t, double A, double m, double sigma, double step_length, Rcpp::NumericVector dW);
+RcppExport SEXP _arnesdeestimatr_updatestep_F_dist(SEXP X_0SEXP, SEXP lambda_tSEXP, SEXP ASEXP, SEXP mSEXP, SEXP sigmaSEXP, SEXP step_lengthSEXP, SEXP dWSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type X_0(X_0SEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type lambda_t(lambda_tSEXP);
+    Rcpp::traits::input_parameter< double >::type A(ASEXP);
+    Rcpp::traits::input_parameter< double >::type m(mSEXP);
+    Rcpp::traits::input_parameter< double >::type sigma(sigmaSEXP);
+    Rcpp::traits::input_parameter< double >::type step_length(step_lengthSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type dW(dWSEXP);
+    rcpp_result_gen = Rcpp::wrap(updatestep_F_dist(X_0, lambda_t, A, m, sigma, step_length, dW));
+    return rcpp_result_gen;
+END_RCPP
+}
+// updatestep_jacobi
+Rcpp::NumericVector updatestep_jacobi(double X_0, Rcpp::NumericVector lambda_t, double A, double m, double sigma, double step_length, Rcpp::NumericVector dW);
+RcppExport SEXP _arnesdeestimatr_updatestep_jacobi(SEXP X_0SEXP, SEXP lambda_tSEXP, SEXP ASEXP, SEXP mSEXP, SEXP sigmaSEXP, SEXP step_lengthSEXP, SEXP dWSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type X_0(X_0SEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type lambda_t(lambda_tSEXP);
+    Rcpp::traits::input_parameter< double >::type A(ASEXP);
+    Rcpp::traits::input_parameter< double >::type m(mSEXP);
+    Rcpp::traits::input_parameter< double >::type sigma(sigmaSEXP);
+    Rcpp::traits::input_parameter< double >::type step_length(step_lengthSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type dW(dWSEXP);
+    rcpp_result_gen = Rcpp::wrap(updatestep_jacobi(X_0, lambda_t, A, m, sigma, step_length, dW));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_arnesdeestimatr_updatestep_additive_model", (DL_FUNC) &_arnesdeestimatr_updatestep_additive_model, 7},
     {"_arnesdeestimatr_updatestep_sqrt_model", (DL_FUNC) &_arnesdeestimatr_updatestep_sqrt_model, 7},
+    {"_arnesdeestimatr_updatestep_linear_model", (DL_FUNC) &_arnesdeestimatr_updatestep_linear_model, 7},
+    {"_arnesdeestimatr_updatestep_t_dist", (DL_FUNC) &_arnesdeestimatr_updatestep_t_dist, 7},
+    {"_arnesdeestimatr_updatestep_F_dist", (DL_FUNC) &_arnesdeestimatr_updatestep_F_dist, 7},
+    {"_arnesdeestimatr_updatestep_jacobi", (DL_FUNC) &_arnesdeestimatr_updatestep_jacobi, 7},
     {NULL, NULL, 0}
 };
 

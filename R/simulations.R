@@ -44,8 +44,39 @@ simulate_stochastic_saddlenode_bifurcation <- function(step_length, par,
                                 m = m,
                                 sigma = sigma,
                                 step_length = step_length,
-                                dW = dW)
-
+                                dW = dW),
+         "linear" = X_t <- updatestep_linear_model(
+                                X_0 = X_0,
+                                lambda_t = lambda_t,
+                                A = A,
+                                m = m,
+                                sigma = sigma,
+                                step_length = step_length,
+                                dW = dW),
+         "t-dist" = X_t <- updatestep_t_dist(
+                           X_0 = X_0,
+                           lambda_t = lambda_t,
+                           A = A,
+                           m = m,
+                           sigma = sigma,
+                           step_length = step_length,
+                           dW = dW),
+         "F-dist" = X_t <- updatestep_F_dist(
+                           X_0 = X_0,
+                           lambda_t = lambda_t,
+                           A = A,
+                           m = m,
+                           sigma = sigma,
+                           step_length = step_length,
+                           dW = dW),
+         "Jacobi" = X_t <- updatestep_jacobi(
+                           X_0 = X_0,
+                           lambda_t = lambda_t,
+                           A = A,
+                           m = m,
+                           sigma = sigma,
+                           step_length = step_length,
+                           dW = dW)
          )
 
   data.frame(t = time,
