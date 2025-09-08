@@ -112,6 +112,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// updatestep_OU_process
+Rcpp::NumericVector updatestep_OU_process(double X_0, double beta, double mu, double sigma, double step_length, Rcpp::NumericVector dW);
+RcppExport SEXP _arnesdeestimatr_updatestep_OU_process(SEXP X_0SEXP, SEXP betaSEXP, SEXP muSEXP, SEXP sigmaSEXP, SEXP step_lengthSEXP, SEXP dWSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type X_0(X_0SEXP);
+    Rcpp::traits::input_parameter< double >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< double >::type mu(muSEXP);
+    Rcpp::traits::input_parameter< double >::type sigma(sigmaSEXP);
+    Rcpp::traits::input_parameter< double >::type step_length(step_lengthSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type dW(dWSEXP);
+    rcpp_result_gen = Rcpp::wrap(updatestep_OU_process(X_0, beta, mu, sigma, step_length, dW));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_arnesdeestimatr_updatestep_saddlenode_additive_model", (DL_FUNC) &_arnesdeestimatr_updatestep_saddlenode_additive_model, 7},
@@ -120,6 +136,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_arnesdeestimatr_updatestep_saddlenode_t_dist", (DL_FUNC) &_arnesdeestimatr_updatestep_saddlenode_t_dist, 7},
     {"_arnesdeestimatr_updatestep_saddlenode_F_dist", (DL_FUNC) &_arnesdeestimatr_updatestep_saddlenode_F_dist, 7},
     {"_arnesdeestimatr_updatestep_saddlenode_jacobi", (DL_FUNC) &_arnesdeestimatr_updatestep_saddlenode_jacobi, 7},
+    {"_arnesdeestimatr_updatestep_OU_process", (DL_FUNC) &_arnesdeestimatr_updatestep_OU_process, 6},
     {NULL, NULL, 0}
 };
 

@@ -25,3 +25,7 @@ updatestep_saddlenode_jacobi <- function(X_0, lambda_t, A, m, sigma, step_length
     .Call(`_arnesdeestimatr_updatestep_saddlenode_jacobi`, X_0, lambda_t, A, m, sigma, step_length, dW)
 }
 
+updatestep_OU_process <- function(X_0, beta, mu, sigma, step_length, dW) {
+    .Call(`_arnesdeestimatr_updatestep_OU_process`, X_0, beta, mu, sigma, step_length, dW)
+}
+

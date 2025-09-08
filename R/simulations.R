@@ -53,7 +53,8 @@
 #'
 #' @export
 
-simulate_stochastic_saddlenode_bifurcation <- function(step_length, par,
+simulate_stochastic_saddlenode_bifurcation <- function(step_length,
+                                                  par,
                                                   tau = 100,
                                                   t_0 = 10,
                                                   X_0 = NA,
@@ -141,5 +142,37 @@ simulate_stochastic_saddlenode_bifurcation <- function(step_length, par,
              mu_t)
 }
 
+#' @export
+simulate_pearson_diffusion <- function(step_length,
+                                       par,
+                                       total_time,
+                                       X_0 = NA,
+                                       sample_method = "auto",
+                                       model = "OU"){
+  beta  <- par[1]
+  mu    <- par[2]
+  sigma <- par[3]
 
+  # Initial point in fixed point of process if none specified
+  if(is.na(X_0)){X_0 <- mu}
+  N          <- as.integer((total_time) / step_length)
+
+  # Initialize the process
+
+  dW            <- fast_rnorm(N, mean = 0, standard_deviation = sqrt(step_length), method = sample_method)
+  time          <- step_length * 0:N
+
+  switch(model,
+         "OU" = X_t <- updatestep_OU_process(
+           X_0 = X_0,
+           beta = beta,
+           mu = mu,
+           sigma = sigma,
+           step_length = step_length,
+           dW = dW)
+  )
+
+  data.frame(t = time,
+             X_t)
+}
 

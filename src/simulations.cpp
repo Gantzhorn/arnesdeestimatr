@@ -200,3 +200,26 @@ Rcpp::NumericVector updatestep_saddlenode_jacobi(double X_0,
 
   return X_t;
 }
+
+// [[Rcpp::export]]
+Rcpp::NumericVector updatestep_OU_process(double X_0,
+                                                         double beta,
+                                                         double mu,
+                                                         double sigma,
+                                                         double step_length,
+                                                         Rcpp::NumericVector dW){
+
+
+  int N = dW.size() + 1; // ONE MORE AS THERE IS ONE MORE JUMP THAN POINTS
+
+  Rcpp::NumericVector X_t(N);
+
+  X_t[0] = X_0;
+
+  for(int i = 0; i < (N - 1); i++){
+    X_t[i + 1] = X_t[i] - beta * (X_t[i] - mu) * step_length + sigma * dW[i];
+  }
+
+  return X_t;
+}
+
