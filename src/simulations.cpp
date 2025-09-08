@@ -1,7 +1,7 @@
 #include <Rcpp.h>
 
 // [[Rcpp::export]]
-Rcpp::NumericVector updatestep_additive_model(double X_0,
+Rcpp::NumericVector updatestep_saddlenode_additive_model(double X_0,
                                               Rcpp::NumericVector lambda_t,
                                               double A,
                                               double m,
@@ -31,7 +31,7 @@ Rcpp::NumericVector updatestep_additive_model(double X_0,
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector updatestep_sqrt_model(double X_0,
+Rcpp::NumericVector updatestep_saddlenode_sqrt_model(double X_0,
                                               Rcpp::NumericVector lambda_t,
                                               double A,
                                               double m,
@@ -66,7 +66,7 @@ Rcpp::NumericVector updatestep_sqrt_model(double X_0,
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector updatestep_linear_model(double X_0,
+Rcpp::NumericVector updatestep_saddlenode_linear_model(double X_0,
                                           Rcpp::NumericVector lambda_t,
                                           double A,
                                           double m,
@@ -98,7 +98,7 @@ Rcpp::NumericVector updatestep_linear_model(double X_0,
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector updatestep_t_dist(double X_0,
+Rcpp::NumericVector updatestep_saddlenode_t_dist(double X_0,
                                             Rcpp::NumericVector lambda_t,
                                             double A,
                                             double m,
@@ -132,7 +132,7 @@ Rcpp::NumericVector updatestep_t_dist(double X_0,
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector updatestep_F_dist(double X_0,
+Rcpp::NumericVector updatestep_saddlenode_F_dist(double X_0,
                                       Rcpp::NumericVector lambda_t,
                                       double A,
                                       double m,
@@ -167,7 +167,7 @@ Rcpp::NumericVector updatestep_F_dist(double X_0,
 
 
 // [[Rcpp::export]]
-Rcpp::NumericVector updatestep_jacobi(double X_0,
+Rcpp::NumericVector updatestep_saddlenode_jacobi(double X_0,
                                       Rcpp::NumericVector lambda_t,
                                       double A,
                                       double m,

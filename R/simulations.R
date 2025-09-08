@@ -1,3 +1,58 @@
+#' Simulate a Stochastic Saddle-Node Bifurcation
+#'
+#' This function simulates the trajectory of a stochastic system undergoing a saddle-node bifurcation
+#' with time-dependent bifurcation parameter. Different types of stochastic noise can be used, including
+#' additive, multiplicative, and heavy-tailed distributions.
+#'
+#' @param step_length Numeric. The time increment for each simulation step.
+#' @param par Numeric vector. Model parameters:
+#'   \describe{
+#'     \item{A}{Scaling of the process.}
+#'     \item{m}{Shift of the process.}
+#'     \item{lambda_0}{Initial value of the bifurcation parameter.}
+#'     \item{sigma}{Diffusion parameter.}
+#'     \item{nu}{(Optional) Exponent controlling the time-dependence of lambda. Defaults to 1.}
+#'   }
+#' @param tau Numeric. Time scale over which the bifurcation parameter changes. Default is 100.
+#' @param t_0 Numeric. Initial time offset before the bifurcation starts. Default is 10.
+#' @param X_0 Numeric. Initial value of the state variable. If `NA`, the function sets it to the stable fixed point. Default is `NA`.
+#' @param beyond_tipping Numeric. Additional simulation time beyond the bifurcation point. Default is 0.
+#' @param sample_method Character. Method used for generating random noise. Passed to `fast_rnorm()`. Default is `"auto"` other valid arguments are: `"stats"` and `"dqrng"`.
+#' @param noise_term Character. Type of stochastic noise to use. Options are:
+#'   \itemize{
+#'     \item `"additive"`: additive Gaussian noise
+#'     \item `"sqrt"`: multiplicative noise proportional to sqrt(X)
+#'     \item `"linear"`: multiplicative noise proportional to X
+#'     \item `"t-dist"`: multiplicative noise proportional to sqrt(X^2 + 1)
+#'     \item `"F-dist"`: multiplicative noise proportional to sqrt(X * (X + 1))
+#'     \item `"Jacobi"`: multiplicative noise proportional to sqrt(X * (1 - X))
+#'   }
+#'
+#' @return A `data.frame` with the following columns:
+#'   \describe{
+#'     \item{t}{Time points of the simulation.}
+#'     \item{X_t}{Simulated trajectory of the state variable.}
+#'     \item{lambda_t}{Time-dependent bifurcation parameter.}
+#'     \item{alpha_t}{Central parameter in the estimation of the process.}
+#'     \item{mu_t}{Location of the stable fixed point.}
+#'   }
+#'
+#' @details
+#' The function discretizes the stochastic differential equation describing a saddle-node bifurcation
+#' and applies the chosen stochastic noise term at each time step. The time-dependent bifurcation
+#' parameter \code{lambda_t} decreases after \code{t_0} according to a power law with exponent \code{nu}.
+#'
+#' @examples
+#' # Simulate with additive noise
+#' simulate_stochastic_saddlenode_bifurcation(
+#'   step_length = 0.1,
+#'   par = c(A = -1, m = 0, lambda_0 = 1, sigma = 0.1),
+#'   tau = 50,
+#'   t_0 = 5
+#' )
+#'
+#' @export
+
 simulate_stochastic_saddlenode_bifurcation <- function(step_length, par,
                                                   tau = 100,
                                                   t_0 = 10,
@@ -29,7 +84,7 @@ simulate_stochastic_saddlenode_bifurcation <- function(step_length, par,
   mu_t          <- m + sqrt(abs(lambda_t / A))
 
   switch(noise_term,
-         "additive" = X_t <- updatestep_additive_model(
+         "additive" = X_t <- updatestep_saddlenode_additive_model(
                                 X_0 = X_0,
                                 lambda_t = lambda_t,
                                 A = A,
@@ -37,7 +92,7 @@ simulate_stochastic_saddlenode_bifurcation <- function(step_length, par,
                                 sigma = sigma,
                                 step_length = step_length,
                                 dW = dW),
-         "sqrt" = X_t <- updatestep_sqrt_model(
+         "sqrt" = X_t <- updatestep_saddlenode_sqrt_model(
                                 X_0 = X_0,
                                 lambda_t = lambda_t,
                                 A = A,
@@ -45,7 +100,7 @@ simulate_stochastic_saddlenode_bifurcation <- function(step_length, par,
                                 sigma = sigma,
                                 step_length = step_length,
                                 dW = dW),
-         "linear" = X_t <- updatestep_linear_model(
+         "linear" = X_t <- updatestep_saddlenode_linear_model(
                                 X_0 = X_0,
                                 lambda_t = lambda_t,
                                 A = A,
@@ -53,7 +108,7 @@ simulate_stochastic_saddlenode_bifurcation <- function(step_length, par,
                                 sigma = sigma,
                                 step_length = step_length,
                                 dW = dW),
-         "t-dist" = X_t <- updatestep_t_dist(
+         "t-dist" = X_t <- updatestep_saddlenode_t_dist(
                            X_0 = X_0,
                            lambda_t = lambda_t,
                            A = A,
@@ -61,7 +116,7 @@ simulate_stochastic_saddlenode_bifurcation <- function(step_length, par,
                            sigma = sigma,
                            step_length = step_length,
                            dW = dW),
-         "F-dist" = X_t <- updatestep_F_dist(
+         "F-dist" = X_t <- updatestep_saddlenode_F_dist(
                            X_0 = X_0,
                            lambda_t = lambda_t,
                            A = A,
@@ -69,7 +124,7 @@ simulate_stochastic_saddlenode_bifurcation <- function(step_length, par,
                            sigma = sigma,
                            step_length = step_length,
                            dW = dW),
-         "Jacobi" = X_t <- updatestep_jacobi(
+         "Jacobi" = X_t <- updatestep_saddlenode_jacobi(
                            X_0 = X_0,
                            lambda_t = lambda_t,
                            A = A,
