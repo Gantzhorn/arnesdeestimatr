@@ -1,10 +1,13 @@
 Package: arnesdeestimatr
-Title: What the Package Does (One Line, Title Case)
+Title: Methods for Stochastic Differential Equations
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+    person(given = "Anders Gantzhorn", family = "Kristensen",
+    , email = "andersgantzhorn@gmail.com", role = c("aut", "cre"))
+Description: Provides tools to simulate stochastic differential equations and estimate parameters herein.
+             The models include different noise models, additive and multiplicative
+             as well as models with time-dependent bifurcation parameters - designed for computational
+             exploration of tipping points in dynamical systems.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
