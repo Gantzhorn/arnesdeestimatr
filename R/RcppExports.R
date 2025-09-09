@@ -45,3 +45,7 @@ updatestep_F_diffusion_process <- function(X_0, beta, mu, sigma, step_length, dW
     .Call(`_arnesdeestimatr_updatestep_F_diffusion_process`, X_0, beta, mu, sigma, step_length, dW)
 }
 
+updatestep_jacobi_diffusion_process <- function(X_0, beta, mu, sigma, step_length, dW) {
+    .Call(`_arnesdeestimatr_updatestep_jacobi_diffusion_process`, X_0, beta, mu, sigma, step_length, dW)
+}
+

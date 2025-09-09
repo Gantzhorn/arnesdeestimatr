@@ -349,7 +349,40 @@ Rcpp::NumericVector updatestep_F_diffusion_process(double X_0,
       beta * beta * step_length * step_length * (X_t[i] - mu) -
 
       dW[i] * step_length * sigma / (4 * std::sqrt(X_t[i] * (X_t[i] + 1))) * (
-          beta * (X_t[i] - mu) * X_t[i] + sigma * sigma / 2
+          beta * (X_t[i] - mu) * (2 * X_t[i] + 1) + sigma * sigma / 4
+      );
+  }
+
+  return X_t;
+}
+
+
+// [[Rcpp::export]]
+Rcpp::NumericVector updatestep_jacobi_diffusion_process(double X_0,
+                                                        double beta,
+                                                        double mu,
+                                                        double sigma,
+                                                        double step_length,
+                                                        Rcpp::NumericVector dW){
+
+
+  int N = dW.size() + 1; // ONE MORE AS THERE IS ONE MORE JUMP THAN POINTS
+
+  Rcpp::NumericVector X_t(N);
+
+  X_t[0] = X_0;
+
+  for(int i = 0; i < (N - 1); i++){
+    X_t[i + 1] = X_t[i] - beta * (X_t[i] - mu) * step_length +
+      sigma * std::sqrt(X_t[i] * (1 - X_t[i])) * dW[i] +
+
+      sigma * sigma * (1 - 2 * X_t[i]) * (dW[i] * dW[i] - step_length) / 4  -
+
+      beta * sigma * std::sqrt(X_t[i] * (1 - X_t[i])) * dW[i] * step_length / 2 +
+      beta * beta * step_length * step_length * (X_t[i] - mu) -
+
+      dW[i] * step_length * sigma / (4 * std::sqrt(X_t[i] * (1 - X_t[i]))) * (
+          beta * (X_t[i] - mu) * (1 - 2 * X_t[i]) + sigma * sigma / 4
       );
   }
 

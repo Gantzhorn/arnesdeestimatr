@@ -142,6 +142,66 @@ simulate_stochastic_saddlenode_bifurcation <- function(step_length,
              mu_t)
 }
 
+#' Simulate a Pearson Diffusion Process
+#'
+#' This function simulates the trajectory of an Ergodic Pearson diffusion process.
+#' This class of diffusion constitutes a highly tractable class of diffusions.
+#' Chose between the type of diffusion via the `model` argument.
+#' The options are The Ornstein-Uhlenbeck Process, The Square-root Process,
+#' The Mean-Reverting Geometric Brownian Motion, The t-diffusion, The F-diffusion,
+#' and The Jacobi diffusion.
+#'
+#' @param step_length Numeric. The time increment for each simulation step.
+#' @param par Numeric vector of model parameters:
+#'   \describe{
+#'     \item{beta}{Drift rate - Strengh of mean-reversion}
+#'     \item{mu}{Long-term mean of the process.}
+#'     \item{sigma}{Diffusion coefficient.}
+#'   }
+#' @param total_time Numeric. Total simulation time.
+#' @param X_0 Numeric. Initial value of the process. If `NA`, the function sets it to `mu`. Default is `NA`.
+#' @param sample_method Character. Method used for generating the Wiener increments. Passed to `fast_rnorm()`.
+#'   Default is `"auto"`. Other valid options are `"stats"` and `"dqrng"`.
+#' @param model Character. The type of Pearson diffusion to simulate. Valid options are:
+#'   \itemize{
+#'     \item `"OU"`: Ornstein-Uhlenbeck process (additive Gaussian noise)
+#'     \item `"sqrt"`: Square-root process (proportional to sqrt(X)) or CIR-MODEL
+#'     \item `"linear"`: Linear noise (noise proportional to X) or GARCH MODEL
+#'     \item `"t-dist"`: Multiplicative (noise proportional to sqrt(X^2 + 1)))
+#'     \item `"F-dist"`: Multiplicative (noise proportional to sqrt(X * (X + 1)))
+#'     \item `"Jacobi"`: Jacobi-diffusion - Multiplicative noise proportional to sqrt(X * (1 - X))
+#'   }
+#'
+#' @return A `data.frame` with the following columns:
+#'   \describe{
+#'     \item{t}{Time points of the simulation.}
+#'     \item{X_t}{Simulated trajectory of the process.}
+#'   }
+#'
+#' @details
+#' The function discretizes the chosen Pearson diffusion process and applies the corresponding
+#' update rule at each time step using pre-simulated Wiener increments. The user can select
+#' different diffusion types via the `model` argument.
+#' The update rule is based on Algorithm 8.5 in **Simo Särkkä** and **Arno Solin**: *Applied Stochastic Differential Equations*.
+
+#'
+#' @examples
+#' # Simulate an Ornstein-Uhlenbeck process
+#' simulate_pearson_diffusion(
+#'   step_length = 0.1,
+#'   par = c(beta = 0.5, mu = -0.5, sigma = 0.1),
+#'   total_time = 10,
+#'   model = "OU"
+#' )
+#'
+#' # Simulate a square-root process
+#' simulate_pearson_diffusion(
+#'   step_length = 0.1,
+#'   par = c(beta = 0.5, mu = 2, sigma = 0.1),
+#'   total_time = 10,
+#'   model = "sqrt"
+#' )
+#'
 #' @export
 simulate_pearson_diffusion <- function(step_length,
                                        par,
@@ -194,6 +254,13 @@ simulate_pearson_diffusion <- function(step_length,
            step_length = step_length,
            dW = dW),
          "F-dist" = X_t <- updatestep_F_diffusion_process(
+           X_0 = X_0,
+           beta = beta,
+           mu = mu,
+           sigma = sigma,
+           step_length = step_length,
+           dW = dW),
+         "Jacobi" = X_t <- updatestep_jacobi_diffusion_process(
            X_0 = X_0,
            beta = beta,
            mu = mu,
