@@ -257,7 +257,7 @@ Rcpp::NumericVector updatestep_sqrt_process(double X_0,
       step_length * step_length * beta * beta * (X_t[i] - mu) -
 
       dW[i] * step_length / (2 * std::sqrt(X_t[i])) * (
-        beta * (X_t[i] - mu) / 2 - sigma * sigma / 8
+        beta * (X_t[i] - mu) / 2 + sigma * sigma / 8
       );
   }
 
