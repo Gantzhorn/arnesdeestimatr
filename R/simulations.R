@@ -154,13 +154,15 @@ simulate_pearson_diffusion <- function(step_length,
   sigma <- par[3]
 
   # Initial point in fixed point of process if none specified
-  if(is.na(X_0)){X_0 <- mu}
-  N          <- as.integer((total_time) / step_length)
+  if(is.na(X_0)){
+  X_0   <- mu
+  }
+  N     <- as.integer((total_time) / step_length)
 
   # Initialize the process
 
-  dW            <- fast_rnorm(N, mean = 0, standard_deviation = sqrt(step_length), method = sample_method)
-  time          <- step_length * 0:N
+  dW    <- fast_rnorm(N, mean = 0, standard_deviation = sqrt(step_length), method = sample_method)
+  time  <- step_length * 0:N
 
   switch(model,
          "OU" = X_t <- updatestep_OU_process(
@@ -171,6 +173,27 @@ simulate_pearson_diffusion <- function(step_length,
            step_length = step_length,
            dW = dW),
          "sqrt" = X_t <- updatestep_sqrt_process(
+           X_0 = X_0,
+           beta = beta,
+           mu = mu,
+           sigma = sigma,
+           step_length = step_length,
+           dW = dW),
+         "linear" = X_t <- updatestep_linear_process(
+           X_0 = X_0,
+           beta = beta,
+           mu = mu,
+           sigma = sigma,
+           step_length = step_length,
+           dW = dW),
+         "t-dist" = X_t <- updatestep_t_diffusion_process(
+           X_0 = X_0,
+           beta = beta,
+           mu = mu,
+           sigma = sigma,
+           step_length = step_length,
+           dW = dW),
+         "F-dist" = X_t <- updatestep_F_diffusion_process(
            X_0 = X_0,
            beta = beta,
            mu = mu,

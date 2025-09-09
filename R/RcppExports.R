@@ -33,3 +33,15 @@ updatestep_sqrt_process <- function(X_0, beta, mu, sigma, step_length, dW) {
     .Call(`_arnesdeestimatr_updatestep_sqrt_process`, X_0, beta, mu, sigma, step_length, dW)
 }
 
+updatestep_linear_process <- function(X_0, beta, mu, sigma, step_length, dW) {
+    .Call(`_arnesdeestimatr_updatestep_linear_process`, X_0, beta, mu, sigma, step_length, dW)
+}
+
+updatestep_t_diffusion_process <- function(X_0, beta, mu, sigma, step_length, dW) {
+    .Call(`_arnesdeestimatr_updatestep_t_diffusion_process`, X_0, beta, mu, sigma, step_length, dW)
+}
+
+updatestep_F_diffusion_process <- function(X_0, beta, mu, sigma, step_length, dW) {
+    .Call(`_arnesdeestimatr_updatestep_F_diffusion_process`, X_0, beta, mu, sigma, step_length, dW)
+}
+
