@@ -169,6 +169,13 @@ simulate_pearson_diffusion <- function(step_length,
            mu = mu,
            sigma = sigma,
            step_length = step_length,
+           dW = dW),
+         "sqrt" = X_t <- updatestep_sqrt_process(
+           X_0 = X_0,
+           beta = beta,
+           mu = mu,
+           sigma = sigma,
+           step_length = step_length,
            dW = dW)
   )
 

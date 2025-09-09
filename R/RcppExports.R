@@ -29,3 +29,7 @@ updatestep_OU_process <- function(X_0, beta, mu, sigma, step_length, dW) {
     .Call(`_arnesdeestimatr_updatestep_OU_process`, X_0, beta, mu, sigma, step_length, dW)
 }
 
+updatestep_sqrt_process <- function(X_0, beta, mu, sigma, step_length, dW) {
+    .Call(`_arnesdeestimatr_updatestep_sqrt_process`, X_0, beta, mu, sigma, step_length, dW)
+}
+

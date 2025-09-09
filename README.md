@@ -26,5 +26,5 @@ Currently not available on CRAN.
 To install the latest development version, use:
 
 ```r
-remotes::install_github("your-username/arnesdeestimr")
+remotes::install_github("Gantzhorn/arnesdeestimr")
 ```

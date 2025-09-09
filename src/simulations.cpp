@@ -2,12 +2,12 @@
 
 // [[Rcpp::export]]
 Rcpp::NumericVector updatestep_saddlenode_additive_model(double X_0,
-                                              Rcpp::NumericVector lambda_t,
-                                              double A,
-                                              double m,
-                                              double sigma,
-                                              double step_length,
-                                              Rcpp::NumericVector dW){
+                                                         Rcpp::NumericVector lambda_t,
+                                                         double A,
+                                                         double m,
+                                                         double sigma,
+                                                         double step_length,
+                                                         Rcpp::NumericVector dW){
 
 
   int N = lambda_t.size();
@@ -32,12 +32,12 @@ Rcpp::NumericVector updatestep_saddlenode_additive_model(double X_0,
 
 // [[Rcpp::export]]
 Rcpp::NumericVector updatestep_saddlenode_sqrt_model(double X_0,
-                                              Rcpp::NumericVector lambda_t,
-                                              double A,
-                                              double m,
-                                              double sigma,
-                                              double step_length,
-                                              Rcpp::NumericVector dW){
+                                                     Rcpp::NumericVector lambda_t,
+                                                     double A,
+                                                     double m,
+                                                     double sigma,
+                                                     double step_length,
+                                                     Rcpp::NumericVector dW){
 
 
   int N = lambda_t.size();
@@ -67,12 +67,12 @@ Rcpp::NumericVector updatestep_saddlenode_sqrt_model(double X_0,
 
 // [[Rcpp::export]]
 Rcpp::NumericVector updatestep_saddlenode_linear_model(double X_0,
-                                          Rcpp::NumericVector lambda_t,
-                                          double A,
-                                          double m,
-                                          double sigma,
-                                          double step_length,
-                                          Rcpp::NumericVector dW){
+                                                       Rcpp::NumericVector lambda_t,
+                                                       double A,
+                                                       double m,
+                                                       double sigma,
+                                                       double step_length,
+                                                       Rcpp::NumericVector dW){
 
 
   int N = lambda_t.size();
@@ -99,12 +99,12 @@ Rcpp::NumericVector updatestep_saddlenode_linear_model(double X_0,
 
 // [[Rcpp::export]]
 Rcpp::NumericVector updatestep_saddlenode_t_dist(double X_0,
-                                            Rcpp::NumericVector lambda_t,
-                                            double A,
-                                            double m,
-                                            double sigma,
-                                            double step_length,
-                                            Rcpp::NumericVector dW){
+                                                 Rcpp::NumericVector lambda_t,
+                                                 double A,
+                                                 double m,
+                                                 double sigma,
+                                                 double step_length,
+                                                 Rcpp::NumericVector dW){
 
 
   int N = lambda_t.size();
@@ -133,12 +133,12 @@ Rcpp::NumericVector updatestep_saddlenode_t_dist(double X_0,
 
 // [[Rcpp::export]]
 Rcpp::NumericVector updatestep_saddlenode_F_dist(double X_0,
-                                      Rcpp::NumericVector lambda_t,
-                                      double A,
-                                      double m,
-                                      double sigma,
-                                      double step_length,
-                                      Rcpp::NumericVector dW){
+                                                 Rcpp::NumericVector lambda_t,
+                                                 double A,
+                                                 double m,
+                                                 double sigma,
+                                                 double step_length,
+                                                 Rcpp::NumericVector dW){
 
 
   int N = lambda_t.size();
@@ -168,12 +168,12 @@ Rcpp::NumericVector updatestep_saddlenode_F_dist(double X_0,
 
 // [[Rcpp::export]]
 Rcpp::NumericVector updatestep_saddlenode_jacobi(double X_0,
-                                      Rcpp::NumericVector lambda_t,
-                                      double A,
-                                      double m,
-                                      double sigma,
-                                      double step_length,
-                                      Rcpp::NumericVector dW){
+                                                 Rcpp::NumericVector lambda_t,
+                                                 double A,
+                                                 double m,
+                                                 double sigma,
+                                                 double step_length,
+                                                 Rcpp::NumericVector dW){
 
 
   int N = lambda_t.size();
@@ -203,11 +203,44 @@ Rcpp::NumericVector updatestep_saddlenode_jacobi(double X_0,
 
 // [[Rcpp::export]]
 Rcpp::NumericVector updatestep_OU_process(double X_0,
-                                                         double beta,
-                                                         double mu,
-                                                         double sigma,
-                                                         double step_length,
-                                                         Rcpp::NumericVector dW){
+                                          double beta,
+                                          double mu,
+                                          double sigma,
+                                          double step_length,
+                                          Rcpp::NumericVector dW){
+
+
+  int N = dW.size() + 1; // ONE MORE AS THERE IS ONE MORE JUMP THAN POINTS
+
+  Rcpp::NumericVector X_t(N);
+
+  X_t[0] = X_0;
+
+
+  // PRECOMPUTE CONSTANTS IN OU CONDITIONAL MEAN AND -VARIANCE.
+  // NOTE THIS ONLY WORKS WITH CONSTANT TEMPORAL RESOLUTION
+  double OU_conditionalVariance = std::sqrt(-sigma * sigma / (2 * beta) *
+                                            (std::expm1(-2 * beta * step_length)));
+
+  double OU_conditionalMeanExponentialFactor = std::exp(-beta * step_length);
+
+  double reciprocal_sqrt_step = 1.0 / std::sqrt(step_length);
+
+  for(int i = 0; i < (N - 1); i++){
+    X_t[i + 1] = mu + (X_t[i] - mu) * OU_conditionalMeanExponentialFactor +
+      OU_conditionalVariance * dW[i] * reciprocal_sqrt_step;
+  }
+
+  return X_t;
+}
+
+// [[Rcpp::export]]
+Rcpp::NumericVector updatestep_sqrt_process(double X_0,
+                                          double beta,
+                                          double mu,
+                                          double sigma,
+                                          double step_length,
+                                          Rcpp::NumericVector dW){
 
 
   int N = dW.size() + 1; // ONE MORE AS THERE IS ONE MORE JUMP THAN POINTS
@@ -217,9 +250,16 @@ Rcpp::NumericVector updatestep_OU_process(double X_0,
   X_t[0] = X_0;
 
   for(int i = 0; i < (N - 1); i++){
-    X_t[i + 1] = X_t[i] - beta * (X_t[i] - mu) * step_length + sigma * dW[i];
+    X_t[i + 1] = X_t[i] - beta * (X_t[i] - mu) * step_length + sigma * std::sqrt(X_t[i]) * dW[i] +
+      sigma / 4 * (dW[i] * dW[i] - step_length) -
+
+      beta * sigma * std::sqrt(X_t[i]) * dW[i] * step_length / 2 +
+      step_length * step_length * beta * beta * (X_t[i] - mu) -
+
+      dW[i] * step_length / (2 * std::sqrt(X_t[i])) * (
+        beta * (X_t[i] - mu) / 2 - sigma * sigma / 8
+      );
   }
 
   return X_t;
 }
-
