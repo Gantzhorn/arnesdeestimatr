@@ -12,7 +12,7 @@ simulate_stochastic_saddlenode_bifurcation(
   X_0 = NA,
   beyond_tipping = 0,
   sample_method = "auto",
-  noise_term = "additive"
+  model = "additive"
 )
 }
 \arguments{
@@ -37,7 +37,7 @@ simulate_stochastic_saddlenode_bifurcation(
 
 \item{sample_method}{Character. Method used for generating random noise. Passed to \code{fast_rnorm()}. Default is \code{"auto"} other valid arguments are: \code{"stats"} and \code{"dqrng"}.}
 
-\item{noise_term}{Character. Type of stochastic noise to use. Options are:
+\item{model}{Character. Type of stochastic noise to use. Options are:
 \itemize{
 \item \code{"additive"}: additive Gaussian noise
 \item \code{"sqrt"}: multiplicative noise proportional to sqrt(X)

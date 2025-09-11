@@ -18,7 +18,7 @@
 #' @param X_0 Numeric. Initial value of the state variable. If `NA`, the function sets it to the stable fixed point. Default is `NA`.
 #' @param beyond_tipping Numeric. Additional simulation time beyond the bifurcation point. Default is 0.
 #' @param sample_method Character. Method used for generating random noise. Passed to `fast_rnorm()`. Default is `"auto"` other valid arguments are: `"stats"` and `"dqrng"`.
-#' @param noise_term Character. Type of stochastic noise to use. Options are:
+#' @param model Character. Type of stochastic noise to use. Options are:
 #'   \itemize{
 #'     \item `"additive"`: additive Gaussian noise
 #'     \item `"sqrt"`: multiplicative noise proportional to sqrt(X)
@@ -60,7 +60,7 @@ simulate_stochastic_saddlenode_bifurcation <- function(step_length,
                                                   X_0 = NA,
                                                   beyond_tipping = 0,
                                                   sample_method = "auto",
-                                                  noise_term = "additive"){
+                                                  model = "additive"){
   A        <- par[1]
   m        <- par[2]
   lambda_0 <- par[3]
@@ -84,7 +84,7 @@ simulate_stochastic_saddlenode_bifurcation <- function(step_length,
   alpha_t       <- 2 * sqrt(abs(A * lambda_t))
   mu_t          <- m + sqrt(abs(lambda_t / A))
 
-  switch(noise_term,
+  switch(model,
          "additive" = X_t <- updatestep_saddlenode_additive_model(
                                 X_0 = X_0,
                                 lambda_t = lambda_t,
