@@ -7,9 +7,9 @@
 simulate_stochastic_saddlenode_bifurcation(
   step_length,
   par,
+  X_0 = NA,
   tau = 100,
   t_0 = 10,
-  X_0 = NA,
   beyond_tipping = 0,
   sample_method = "auto",
   model = "additive"
@@ -27,11 +27,11 @@ simulate_stochastic_saddlenode_bifurcation(
 \item{nu}{(Optional) Exponent controlling the time-dependence of lambda. Defaults to 1.}
 }}
 
+\item{X_0}{Numeric. Initial value of the state variable. If \code{NA}, the function sets it to the stable fixed point. Default is \code{NA}.}
+
 \item{tau}{Numeric. Time scale over which the bifurcation parameter changes. Default is 100.}
 
 \item{t_0}{Numeric. Initial time offset before the bifurcation starts. Default is 10.}
-
-\item{X_0}{Numeric. Initial value of the state variable. If \code{NA}, the function sets it to the stable fixed point. Default is \code{NA}.}
 
 \item{beyond_tipping}{Numeric. Additional simulation time beyond the bifurcation point. Default is 0.}
 

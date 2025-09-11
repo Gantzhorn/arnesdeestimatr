@@ -13,9 +13,9 @@
 #'     \item{sigma}{Diffusion parameter.}
 #'     \item{nu}{(Optional) Exponent controlling the time-dependence of lambda. Defaults to 1.}
 #'   }
+#' @param X_0 Numeric. Initial value of the state variable. If `NA`, the function sets it to the stable fixed point. Default is `NA`.
 #' @param tau Numeric. Time scale over which the bifurcation parameter changes. Default is 100.
 #' @param t_0 Numeric. Initial time offset before the bifurcation starts. Default is 10.
-#' @param X_0 Numeric. Initial value of the state variable. If `NA`, the function sets it to the stable fixed point. Default is `NA`.
 #' @param beyond_tipping Numeric. Additional simulation time beyond the bifurcation point. Default is 0.
 #' @param sample_method Character. Method used for generating random noise. Passed to `fast_rnorm()`. Default is `"auto"` other valid arguments are: `"stats"` and `"dqrng"`.
 #' @param model Character. Type of stochastic noise to use. Options are:
@@ -55,9 +55,9 @@
 
 simulate_stochastic_saddlenode_bifurcation <- function(step_length,
                                                   par,
+                                                  X_0 = NA,
                                                   tau = 100,
                                                   t_0 = 10,
-                                                  X_0 = NA,
                                                   beyond_tipping = 0,
                                                   sample_method = "auto",
                                                   model = "additive"){
@@ -158,8 +158,8 @@ simulate_stochastic_saddlenode_bifurcation <- function(step_length,
 #'     \item{mu}{Long-term mean of the process.}
 #'     \item{sigma}{Diffusion coefficient.}
 #'   }
-#' @param total_time Numeric. Total simulation time.
 #' @param X_0 Numeric. Initial value of the process. If `NA`, the function sets it to `mu`. Default is `NA`.
+#' @param total_time Numeric. Total simulation time.
 #' @param sample_method Character. Method used for generating the Wiener increments. Passed to `fast_rnorm()`.
 #'   Default is `"auto"`. Other valid options are `"stats"` and `"dqrng"`.
 #' @param model Character. The type of Pearson diffusion to simulate. Valid options are:
@@ -205,8 +205,8 @@ simulate_stochastic_saddlenode_bifurcation <- function(step_length,
 #' @export
 simulate_pearson_diffusion <- function(step_length,
                                        par,
-                                       total_time,
                                        X_0 = NA,
+                                       total_time,
                                        sample_method = "auto",
                                        model = "OU"){
   beta  <- par[1]
@@ -271,5 +271,75 @@ simulate_pearson_diffusion <- function(step_length,
 
   data.frame(t = time,
              X_t)
+}
+
+
+#' Generic Euler-Maruyama scheme based Simulation for SDE-objects
+#'
+#' This function simulates a general one-dimensional SDE using the Euler-Maruyama method. It will be
+#' used automatically if the SDE object does not provide a custom `simulate_fun`.
+#'
+#' @param step_length Numeric. Time increment for each simulation step.
+#' @param par Numeric vector. Model parameters.
+#' @param X_0 Numeric. Initial value of the state variable.
+#' @param total_time Numeric. Total simulation time.
+#' @param drift Function. Drift function drift(x, par).
+#' @param diffusion Function. Diffusion function diffusion(x, par).
+#' @param sample_method Character. Method for generating random noise ("auto", "stats", "dqrng").
+#'
+#' @return A data.frame with columns `t` and `X`.
+#' @keywords internal
+simulate_generic <- function(step_length,
+                             par,
+                             X_0,
+                             total_time,
+                             drift,
+                             diffusion,
+                             sample_method = "auto") {
+
+  # Validate types and values
+  if (!is.numeric(step_length) || length(step_length) != 1 || step_length <= 0) {
+    stop("step_length must be a single positive numeric value")
+  }
+
+  if (!is.numeric(par) || length(par) < 1) {
+    stop("par must be a numeric vector of length >= 1")
+  }
+
+  if (!is.numeric(X_0) || length(X_0) != 1 || is.na(X_0)) {
+    stop("X_0 must be a single numeric value and cannot be NA")
+  }
+
+  if (!is.numeric(total_time) || length(total_time) != 1 || total_time <= 0) {
+    stop("total_time must be a single positive numeric value")
+  }
+
+  if (!is.function(drift)) {
+    stop("drift must be a function")
+  }
+
+  if (!is.function(diffusion)) {
+    stop("diffusion must be a function")
+  }
+
+  if (!is.character(sample_method) || !(sample_method %in% c("auto", "stats", "dqrng"))) {
+    stop('sample_method must be one of "auto", "stats", or "dqrng"')
+  }
+
+  N <- as.integer(total_time / step_length)
+  t <- seq(0, total_time, length.out = N + 1)
+  x <- numeric(N + 1)
+
+  x[1] <- X_0
+
+  dW <- fast_rnorm(N, mean = 0, standard_deviation = sqrt(step_length), method = sample_method)
+
+  for (i in 1:N) {
+    drift_val <- drift(x[i], par)
+    diffusion_val <- diffusion(x[i], par)
+    x[i + 1] <- x[i] + drift_val * step_length + diffusion_val * dW[i]
+  }
+
+  data.frame(t = t, X = x)
 }
 

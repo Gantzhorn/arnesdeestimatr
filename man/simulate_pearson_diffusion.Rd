@@ -7,8 +7,8 @@
 simulate_pearson_diffusion(
   step_length,
   par,
-  total_time,
   X_0 = NA,
+  total_time,
   sample_method = "auto",
   model = "OU"
 )
@@ -23,9 +23,9 @@ simulate_pearson_diffusion(
 \item{sigma}{Diffusion coefficient.}
 }}
 
-\item{total_time}{Numeric. Total simulation time.}
-
 \item{X_0}{Numeric. Initial value of the process. If \code{NA}, the function sets it to \code{mu}. Default is \code{NA}.}
+
+\item{total_time}{Numeric. Total simulation time.}
 
 \item{sample_method}{Character. Method used for generating the Wiener increments. Passed to \code{fast_rnorm()}.
 Default is \code{"auto"}. Other valid options are \code{"stats"} and \code{"dqrng"}.}

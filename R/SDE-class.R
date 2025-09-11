@@ -1,0 +1,110 @@
+#' Create a general SDE object
+#'
+#' @param name Character. Name of the system that the Stochastic Differential Equation models.
+#' @param par Numeric vector. Model parameters.
+#' @param drift Function. Drift function drift(x, par).
+#' @param diffusion Function. Diffusion function diffusion(x, par).
+#' @param drift_dx Function. Optional derivative of drift with respect to x_t
+#' @param drift_dt Function. Optional derivative of drift with respect to x_t. This is 0 for all autonomous processes.
+#' @param diffusion_dx Function. Optional derivative of diffusion
+#' @param lamperti_transform Function. Optional Lamperti transform that omits any parameters. I.e. the anti-derivative of 1 / diffusion(x)
+#' @param simulate_fun Function. Optional custom simulation function.
+#' @return An object of class \code{SDE}.
+#' @export
+SDE <- function(name,
+                par,
+                drift,
+                diffusion,
+                drift_dx = NULL,
+                drift_dt = NULL,
+                diffusion_dx = NULL,
+                lamperti_transform = NULL,
+                simulate_fun = NULL) {
+
+  if (!is.character(name)) stop("name must be a character string")
+  if (!is.numeric(par)) stop("par must be numeric")
+
+  obj <- list(
+    name = name,
+    par = par,
+    nparms = length(par),
+    drift = drift,
+    diffusion = diffusion,
+    drift_dx = drift_dx,
+    drift_dt = drift_dt,
+    diffusion_dx = diffusion_dx,
+    lamperti_transform = lamperti_transform,
+    simulate_fun = simulate_fun
+  )
+
+  class(obj) <- "SDE"
+  obj
+}
+
+
+#' Print an SDE
+#'
+#' Prints a summary of an object of class \code{SDE}.
+#'
+#' @param x An object of class \code{SDE}.
+#' @param ... Additional arguments (currently ignored). Included for S3 consistency.
+#' @export
+print.SDE <- function(x, ...) {
+  cat("SDE object:", x$name, "\n")
+  cat("Number of parameters:", x$nparms, "\n")
+  cat("Parameters:", x$par, "\n")
+  if (!is.null(x$simulate_fun)) cat("Has a custom simulation method.\n")
+  invisible(x)
+}
+
+#' Simulate an SDE
+#'
+#' Simulates the trajectory of an SDE object.
+#'
+#' Depending on whether or not a custom simulation method has been given to `simulate_fun`. This method will either:
+#' 1. Use the custom simulation function `simulate_fun` of the `SDE`-object and sample according to it, or
+#' 2. Use a generic Euler-Maruyama simulation based on the `drift`- and `diffusion`-functions from the `SDE`-object,
+#'  in which case the arguments: `step_length`, `total_time`, and `X_0` **must** be provided in `...`.
+#'
+#' @param object An object of class \code{SDE}.
+#' @param ... Additional arguments passed to the simulation function. For the generic simulation,
+#'   this must include:
+#'   \itemize{
+#'     \item \code{step_length}: Numeric. Time increment for each simulation step.
+#'     \item \code{total_time}: Numeric. Total simulation time.
+#'     \item \code{X_0}: Numeric. Initial value of the state variable.
+#'   }
+#'  Additionally, \code{sample_method} can be specified for the generic simulation method.
+#'  Although this is optional. The valid parameters for this argument is ("auto", "stats", "dqrng"). Default is "auto".
+#' @export
+simulate_SDE <- function(object, ...) {
+  args <- list(...)
+
+  if (!inherits(object, "SDE")) stop("object must be of class 'SDE'")
+
+  if (!is.null(object$simulate_fun)) {
+    # Use user-provided simulation function
+    object$simulate_fun(par = object$par, ...)
+  } else {
+    # Ensure required arguments for generic simulation are provided
+    required <- c("step_length", "total_time", "X_0")
+    missing_args <- required[!required %in% names(args)]
+    if (length(missing_args) > 0) {
+      stop("Missing required arguments for generic simulation: ", paste(missing_args, collapse = ", "))
+    }
+
+    simulate_generic(
+      step_length   = args$step_length,
+      total_time    = args$total_time,
+      X_0           = args$X_0,
+      par           = object$par,
+      drift         = object$drift,
+      diffusion     = object$diffusion,
+      sample_method = if ("sample_method" %in% names(args)) args$sample_method else "auto"
+    )
+  }
+}
+
+
+
+
