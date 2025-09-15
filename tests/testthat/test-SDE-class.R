@@ -81,7 +81,7 @@ test_that("fit_SDE recovers parameters approximately and estimates in expected m
   drift <- function(x, par) {-par[1] * x}
   diffusion <- function(x, par) {par[2]}
   true_par <- c(5, 1.5)
-  sde <- SDE("OU_estimation", drift, diffusion, par = true_par)
+  sde <- SDE("OU_estimation_consistency", drift, diffusion, par = true_par)
   sde <- simulate_SDE(sde, step_length = 0.05, total_time = 100, X_0 = 1)
 
   fit1 <- fit_SDE(sde, init_par = c(0.5, 1))
@@ -97,6 +97,39 @@ test_that("fit_SDE recovers parameters approximately and estimates in expected m
 
 
   expect_equal(fit1$par, fit2$par)
+
+})
+
+
+test_that("fit_SDE recovers parameters approximately and estimates in expected manner.", {
+  drift <- function(x, par) {-par[1] * (x - par[2])}
+  diffusion <- function(x, par) {par[3] * sqrt(x^2 + 1)}
+  true_par <- c(4, 1.5, 0.85)
+  step_length <- 0.005
+
+
+  sde <- SDE("T-diffusion_with_and_without_parameters", drift, diffusion)
+
+
+  dqrng::dqset.seed(123)
+  data <- arnesdeestimatr::simulate_pearson_diffusion(step_length,
+                                                      par = true_par,
+                                                      X_0 = true_par[2],
+                                                      total_time = 1000,
+                                                      model = "t-dist")$X_t
+
+
+  fit1 <- suppressWarnings(
+    fit_SDE(SDE_object = sde,
+            init_par = true_par,
+            step_length = step_length,
+            data = data)
+  )
+
+  expect_false(any(is.na(fit1$par)))
+
+  expect_length(fit1$par, length(true_par))
+  expect_equal(fit1$par, c(3.8964457, 1.4866069, 0.8449703))
 
 })
 
