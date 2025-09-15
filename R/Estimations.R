@@ -49,23 +49,25 @@ EM_likelihood_generic <- function(SDE_object, par, step_length, data) {
 
 #' Fit an SDE using Euler-Maruyama Maximum Likelihood
 #'
-#' Optimizes parameters of an SDE object using the Euler-Maruyama approximation.
+#' Optimizes parameters of an SDE object using the provided method or an Euler-Maruyama approximation as fallback.
 #'
 #' @param SDE_object An object of class \code{SDE} containing drift and diffusion and potentially data and step_length,
+#' @param likelihood Function. Implements the negative log-likelihood that we wish to minimize. Fall back is provided EM-based negative log-likelihood provided in: EM_likelihood_generic
 #' @param init_par Numeric vector. Initial guess for the parameters.
 #' @param step_length Numeric vector. Optional temporal resolution of the trajectory in the data argument, if the SDE_object for instance does contain a trajectory.
 #' @param data Numeric vector. Optional realized trajectory from the model given in the SDE_object, if this does not contain a trajectory, this can be passed explicitly here.
-#' @param method Optimization method (default "BFGS").
+#' @param optimization_method Optimization method (default "BFGS").
 #' @param ... Additional arguments passed to \code{\link[stats]{optim}}.
 #'
 #' @return A list with elements `par` (estimated parameters) and `value` (negative log-likelihood).
 #' @export
-fit_SDE_EM <- function(SDE_object,
-                       init_par,
-                       step_length = NA,
-                       data = NA,
-                       method = "BFGS",
-                       ...) {
+fit_SDE <- function(SDE_object,
+                    likelihood = EM_likelihood_generic,
+                    init_par,
+                    step_length = NA,
+                    data = NA,
+                    optimization_method = "BFGS",
+                    ...) {
 
   if (!inherits(SDE_object, "SDE")) stop("SDE_object must be of class 'SDE'")
   if (!is.numeric(SDE_object$X_t) && !is.numeric(data)) stop("Must provide numeric data either via SDE instance or directly with the data-argument.")
@@ -77,20 +79,14 @@ fit_SDE_EM <- function(SDE_object,
   if(length(SDE_object$step_length) == 1 && is.na(step_length)){
     step_length <- SDE_object$step_length
   }
-  if(length(SDE_object$X_t) > 0 && is.na(data)){
+  if(length(SDE_object$X_t) > 0 && any(is.na(data))){
     data <- SDE_object$X_t
   }
-  # Wrapper for optim
-  # EM_wrapper <- function(par_vec) {
-  #   temp_SDE <- SDE_object
-  #   temp_SDE$par <- par_vec
-  #   EM_likelihood_generic(SDE_object = temp_SDE)
-  # }
 
   res <- stats::optim(
     par = init_par,
-    fn = EM_likelihood_generic,
-    method = method,
+    fn = likelihood,
+    method = optimization_method,
     SDE_object = SDE_object,
     data = data,
     step_length = step_length,

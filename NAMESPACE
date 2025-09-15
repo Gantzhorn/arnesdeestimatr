@@ -3,7 +3,7 @@
 S3method(print,SDE)
 export(EM_likelihood_generic)
 export(SDE)
-export(fit_SDE_EM)
+export(fit_SDE)
 export(runge_kutta_vect)
 export(simulate_SDE)
 export(simulate_pearson_diffusion)

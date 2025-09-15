@@ -25,6 +25,7 @@ SDE <- function(name,
   if (!is.function(drift)) stop("drift must be a function")
   if (!is.function(diffusion)) stop("diffusion must be a function")
 
+
   obj <- list(
     name = name,
     par = par,
@@ -38,7 +39,7 @@ SDE <- function(name,
     simulate_fun = simulate_fun,
     X_t = numeric(),
     t = numeric(),
-    simulate_step_length = NA
+    step_length = NA
   )
 
   class(obj) <- "SDE"
@@ -91,8 +92,9 @@ simulate_SDE <- function(object, step_length, ...) {
 
   if (!inherits(object, "SDE")) stop("object must be of class 'SDE'.")
   if (!is.numeric(object$par)) stop("object must have numeric parameters to simulate.")
+  if(!is.numeric(step_length)) stop("Must provide a step_length to simulate.")
   if (!is.null(object$simulate_fun)) {
-    sim <- object$simulate_fun(par = object$par, ...)
+    sim <- object$simulate_fun(par = object$par, step_length, ...)
   } else {
     # Ensure required arguments for generic simulation are provided
     required <- c("total_time", "X_0")
@@ -114,7 +116,7 @@ simulate_SDE <- function(object, step_length, ...) {
   # Store the simulated trajectory in the object
   object$X_t <- sim$X_t
   object$t <- sim$t
-  object$simulate_step_length <- step_length
+  object$step_length <- step_length
   return(object)
 }
 
