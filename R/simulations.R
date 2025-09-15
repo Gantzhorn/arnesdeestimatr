@@ -287,7 +287,7 @@ simulate_pearson_diffusion <- function(step_length,
 #' @param diffusion Function. Diffusion function diffusion(x, par).
 #' @param sample_method Character. Method for generating random noise ("auto", "stats", "dqrng").
 #'
-#' @return A data.frame with columns `t` and `X`.
+#' @return A data.frame with columns `t` and `X_t`.
 #' @keywords internal
 simulate_generic <- function(step_length,
                              par,
@@ -340,6 +340,6 @@ simulate_generic <- function(step_length,
     x[i + 1] <- x[i] + drift_val * step_length + diffusion_val * dW[i]
   }
 
-  data.frame(t = t, X = x)
+  data.frame(t = t, X_t = x)
 }
 

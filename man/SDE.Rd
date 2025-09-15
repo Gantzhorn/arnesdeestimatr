@@ -6,9 +6,9 @@
 \usage{
 SDE(
   name,
-  par,
   drift,
   diffusion,
+  par = NULL,
   drift_dx = NULL,
   drift_dt = NULL,
   diffusion_dx = NULL,
@@ -19,15 +19,15 @@ SDE(
 \arguments{
 \item{name}{Character. Name of the system that the Stochastic Differential Equation models.}
 
-\item{par}{Numeric vector. Model parameters.}
-
 \item{drift}{Function. Drift function drift(x, par).}
 
 \item{diffusion}{Function. Diffusion function diffusion(x, par).}
 
+\item{par}{Numeric vector. Optional ground-truth model parameters used to draw trajectories from the model.}
+
 \item{drift_dx}{Function. Optional derivative of drift with respect to x_t}
 
-\item{drift_dt}{Function. Optional derivative of drift with respect to x_t. This is 0 for all autonomous processes.}
+\item{drift_dt}{Function. Optional derivative of drift with respect to t. This is 0 for all autonomous processes.}
 
 \item{diffusion_dx}{Function. Optional derivative of diffusion}
 

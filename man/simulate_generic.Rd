@@ -30,7 +30,7 @@ simulate_generic(
 \item{sample_method}{Character. Method for generating random noise ("auto", "stats", "dqrng").}
 }
 \value{
-A data.frame with columns \code{t} and \code{X}.
+A data.frame with columns \code{t} and \code{X_t}.
 }
 \description{
 This function simulates a general one-dimensional SDE using the Euler-Maruyama method. It will be

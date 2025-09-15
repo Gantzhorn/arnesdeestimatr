@@ -4,15 +4,16 @@
 \alias{simulate_SDE}
 \title{Simulate an SDE}
 \usage{
-simulate_SDE(object, ...)
+simulate_SDE(object, step_length, ...)
 }
 \arguments{
 \item{object}{An object of class \code{SDE}.}
 
+\item{step_length}{Numeric. Time increment for each simulation step.}
+
 \item{...}{Additional arguments passed to the simulation function. For the generic simulation,
 this must include:
 \itemize{
-\item \code{step_length}: Numeric. Time increment for each simulation step.
 \item \code{total_time}: Numeric. Total simulation time.
 \item \code{X_0}: Numeric. Initial value of the state variable.
 }
