@@ -90,26 +90,26 @@ test_that("fit_SDE recovers parameters approximately and estimates in expected m
                      step_length = sde$step_length,
                      data = sde$X_t)
 
-  # CHECK THAT THE ONE
+  # CHECK THAT THE THE STRUCUTRE IS AS EXPECTED AND THAT WE HAVE CONVERGENCE
   expect_true(is.list(fit1))
   expect_length(fit1$par, 2)
   expect_true(fit1$convergence == 0)
 
-
+  # CHECK THAT THE ESTIMATES ARE THE SAME REGARDLESS OF WHETHER WE USE THE SDE OBJECT OR THE RAW STEP_LENGTH AND TRAJECTORIES.
   expect_equal(fit1$par, fit2$par)
 
 })
 
 
-test_that("fit_SDE recovers parameters approximately and estimates in expected manner.", {
+test_that("SDE_fit works both for models with ground-truth parameters and no ground-truth parameters.", {
   drift <- function(x, par) {-par[1] * (x - par[2])}
   diffusion <- function(x, par) {par[3] * sqrt(x^2 + 1)}
   true_par <- c(4, 1.5, 0.85)
   step_length <- 0.005
 
 
-  sde <- SDE("T-diffusion_with_and_without_parameters", drift, diffusion)
-
+  sde_no_groundtruth <- SDE("T-diffusion_with_and_without_parameters", drift, diffusion)
+  sde_groundtruth <- SDE("T-diffusion_with_and_without_parameters", drift, diffusion, par = true_par)
 
   dqrng::dqset.seed(123)
   data <- arnesdeestimatr::simulate_pearson_diffusion(step_length,
@@ -120,17 +120,27 @@ test_that("fit_SDE recovers parameters approximately and estimates in expected m
 
 
   fit1 <- suppressWarnings(
-    fit_SDE(SDE_object = sde,
+    fit_SDE(SDE_object = sde_no_groundtruth,
+            init_par = true_par,
+            step_length = step_length,
+            data = data)
+  )
+
+  fit2 <- suppressWarnings(
+    fit_SDE(SDE_object = sde_groundtruth,
             init_par = true_par,
             step_length = step_length,
             data = data)
   )
 
   expect_false(any(is.na(fit1$par)))
+  expect_false(any(is.na(fit2$par)))
+
 
   expect_length(fit1$par, length(true_par))
+  # ENSURE THAT THE METHODS KEEPS GIVING THE SAME RESULT.
   expect_equal(fit1$par, c(3.8964457, 1.4866069, 0.8449703))
-
+  expect_equal(fit2$par, c(3.8964457, 1.4866069, 0.8449703))
 })
 
 
