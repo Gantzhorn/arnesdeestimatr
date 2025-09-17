@@ -56,9 +56,22 @@ SDE <- function(name,
 #' @export
 print.SDE <- function(x, ...) {
   cat("SDE object:", x$name, "\n")
+
+  # PRINT THE MODEL ON THE FORM dX_t = drift(x,par)dt + diffusion(x, par)dW_t
+  drift_expr <- body(drift)
+  drift_deparsed <- deparse1(drift_expr) # MAKE FUNCTION DEFINITION INTO STRING
+  drift_trimmed <- trimws(gsub("[{}]", "", drift_deparsed)) # TRIM FUNCTION
+
+  diffusion_expr  <- body(diffusion)
+  diffusion_deparsed <- deparse1(diffusion_expr) # MAKE FUNCTION DEFINITION INTO STRING
+  diffusion_trimmed <- trimws(gsub("[{}]", "", diffusion_deparsed)) # TRIM FUNCTION
+
+
+  cat("dX_t = (", drift_trimmed, ") * dt + (", diffusion_trimmed, ") * dW_t\n", sep = "")
+
+  # PRINT ADDITIONAL INFORMATION ABOUT THE MODEL BASED ON WHETHER OR NOT THE MODEL HAS GROUND TRUTH PARAMETERS PROVIDED.
   if (is.numeric(x$par)){
     cat("The model is provided with ground truth parameters.\n")
-    cat("Number of parameters:", x$nparms, "\n")
     cat("Parameters:", x$par, "\n")
   } else{
     cat("The model is not provided with ground truth parameters.\n")
