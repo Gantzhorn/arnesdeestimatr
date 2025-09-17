@@ -58,11 +58,11 @@ print.SDE <- function(x, ...) {
   cat("SDE object:", x$name, "\n")
 
   # PRINT THE MODEL ON THE FORM dX_t = drift(x,par)dt + diffusion(x, par)dW_t
-  drift_expr <- body(drift)
+  drift_expr <- body(x$drift)
   drift_deparsed <- deparse1(drift_expr) # MAKE FUNCTION DEFINITION INTO STRING
   drift_trimmed <- trimws(gsub("[{}]", "", drift_deparsed)) # TRIM FUNCTION
 
-  diffusion_expr  <- body(diffusion)
+  diffusion_expr  <- body(x$diffusion)
   diffusion_deparsed <- deparse1(diffusion_expr) # MAKE FUNCTION DEFINITION INTO STRING
   diffusion_trimmed <- trimws(gsub("[{}]", "", diffusion_deparsed)) # TRIM FUNCTION
 
